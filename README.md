@@ -12,6 +12,14 @@ or
 $ npm install
 ```
 
+#### Add this to `./src/libs/config.js`
+
+```json
+const KESEHATAN_URL = 'your custom url, LOL';
+
+export { KESEHATAN_URL };
+```
+
 #### Run on device
 
 Run on different terminal
