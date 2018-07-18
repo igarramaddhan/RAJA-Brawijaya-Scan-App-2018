@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
+import { KESEHATAN_URL } from './config';
 
 const color = {
 	primary: '#f4511e',
@@ -12,8 +13,12 @@ const tokens = {
 	MARKETPLACE: 'MARKETPLACE_TOKEN',
 	KESEHATAN: 'KESEHATAN_TOKEN'
 };
+
+const getUrlKesehatan = (username, password) =>
+	KESEHATAN_URL + `?username=${username}&password=${password}`;
+
 const { width, height } = Dimensions.get('screen');
 
 const BASE_URL = 'https://18a59e85.ngrok.io/graphql';
 
-export { color, BASE_URL, width, height, tokens };
+export { color, BASE_URL, width, height, tokens, getUrlKesehatan };

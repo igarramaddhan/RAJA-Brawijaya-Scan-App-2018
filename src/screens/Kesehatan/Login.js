@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 
 import Background from '../../../assets/main_bg.png';
-import { color, tokens } from '../../libs/metrics';
+import { color, tokens, getUrlKesehatan } from '../../libs/metrics';
 import { withConsumer } from '../../store';
 
 const styles = StyleSheet.create({
@@ -70,9 +70,7 @@ class Login extends Component<Props, State> {
 	async login(username: String, password: String) {
 		this.setState({ isLoading: true });
 		try {
-			let response = await fetch(
-				`https://rajabrawijaya.ub.ac.id/api/loginPanitia?username=${username}&password=${password}`
-			);
+			let response = await fetch(getUrlKesehatan(username, password));
 			try {
 				console.log('processing data');
 				let responseJson = await response.json();
