@@ -12,11 +12,12 @@ import {
 import { color, tokens } from '../../libs/metrics';
 import Logo from '../../../assets/logo.png';
 import { withConsumer } from '../../store';
+import Background from '../../../assets/main_bg.png';
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		// backgroundColor: '#fff',
 		justifyContent: 'center',
 		alignItems: 'center'
 	}
@@ -48,18 +49,22 @@ class Splash extends Component<Props, State> {
 	}
 	render() {
 		return (
-			<View style={styles.container}>
-				<Image
-					source={Logo}
-					style={{
-						resizeMode: 'cover',
-						height: 300,
-						width: 500
-					}}
-				/>
-				<ActivityIndicator size="large" />
-				<StatusBar backgroundColor="#fff" />
-			</View>
+			<ImageBackground
+				style={{ width: '100%', height: '100%' }}
+				source={Background}
+			>
+				<View style={styles.container}>
+					<Image
+						source={Logo}
+						style={{
+							resizeMode: 'cover',
+							height: 300,
+							width: 500
+						}}
+					/>
+					<ActivityIndicator size="large" />
+				</View>
+			</ImageBackground>
 		);
 	}
 }

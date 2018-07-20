@@ -8,9 +8,12 @@ import {
 	Image,
 	ScrollView,
 	Alert,
-	AsyncStorage
+	AsyncStorage,
+	BackHandler,
+	DeviceEventEmitter
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { NavigationActions } from 'react-navigation';
 
 import { color, width } from '../../libs/metrics';
 import ListCard from '../../components/ListCard';
@@ -19,7 +22,7 @@ import { withConsumer } from '../../store';
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#f2f2f2'
+		backgroundColor: '#feffc6'
 	},
 	floatingButton: {
 		width: 60,
@@ -31,7 +34,8 @@ const styles = StyleSheet.create({
 		right: 10,
 		justifyContent: 'center',
 		alignItems: 'center',
-		elevation: 5
+		elevation: 5,
+		zIndex: 100
 	},
 	itemContent: {
 		flex: 1,
@@ -117,8 +121,20 @@ class Home extends Component<Props, State> {
 		this.props.navigation.setParams({
 			logout: this.logout
 		});
+		BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
 		// this.getDataMahasiswa();
 	}
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+	}
+	onBackPress = () => {
+		this.exit();
+		return true;
+	};
+	exit = () => {
+		this.props.navigation.dispatch(NavigationActions.back());
+		DeviceEventEmitter.emit('popAnimation');
+	};
 	logout = async () => {
 		Alert.alert(
 			'Perhatian',
@@ -135,7 +151,9 @@ class Home extends Component<Props, State> {
 						try {
 							await AsyncStorage.clear();
 							this.props.store.setStoreState({ tokenKesehatan: null });
-							this.props.navigation.navigate('Main');
+							this.props.navigation.dispatch(NavigationActions.back());
+							DeviceEventEmitter.emit('popAnimation');
+							// this.props.navigation.navigate('Main');
 						} catch (error) {
 							Alert.alert('Error', 'Maaf, terjadi kesalahan');
 						}
@@ -176,10 +194,10 @@ class Home extends Component<Props, State> {
 				<TouchableOpacity
 					style={styles.floatingButton}
 					onPress={() => {
-						this.props.navigation.navigate('Camera', {
-							scan: this.scan
-						});
-						// this.scan('185020301111051 Lala');
+						// this.props.navigation.navigate('Camera', {
+						// 	scan: this.scan
+						// });
+						this.scan('185020301111050 Lala');
 					}}
 				>
 					<Icon
@@ -202,10 +220,10 @@ class Home extends Component<Props, State> {
 						<ListCard>
 							<View style={styles.item}>
 								<View style={styles.itemContent}>
-									<Text style={styles.smalllText}>{data.nim}</Text>
-									<Text style={styles.smalllText}>{data.nama}</Text>
+									<Text style={styles.normalText}>{data.nim}</Text>
+									<Text style={styles.normalText}>{data.nama}</Text>
 								</View>
-								<View style={styles.itemContent}>
+								{/* <View style={styles.itemContent}>
 									<Image
 										source={{
 											uri: `http://siakad.ub.ac.id/siam/biodata.fotobynim.php?nim=${
@@ -214,7 +232,7 @@ class Home extends Component<Props, State> {
 										}}
 										style={{ height: 199, width: 132 }}
 									/>
-								</View>
+								</View> */}
 							</View>
 						</ListCard>
 						<ScrollView

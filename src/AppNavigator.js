@@ -53,7 +53,13 @@ const RootNavigator = createStackNavigator(
 				height: 56 + StatusBar.currentHeight,
 				paddingTop: StatusBar.currentHeight
 			}
-		}
+		},
+		transitionConfig: () => ({
+			transitionSpec: {
+				duration: 0
+				// easing: Easing
+			}
+		})
 	}
 );
 

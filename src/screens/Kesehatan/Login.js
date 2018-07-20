@@ -10,8 +10,12 @@ import {
 	ScrollView,
 	Alert,
 	AsyncStorage,
-	ActivityIndicator
+	ActivityIndicator,
+	BackHandler,
+	DeviceEventEmitter
 } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import { NavigationActions } from 'react-navigation';
 
 import Background from '../../../assets/main_bg.png';
 import { color, tokens, getUrlKesehatan } from '../../libs/metrics';
@@ -67,8 +71,21 @@ class Login extends Component<Props, State> {
 			isLoading: false
 		};
 	}
+	componentDidMount() {
+		this.view.bounceInUp(2000);
+		BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+	}
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+	}
+	onBackPress = () => {
+		this.exit();
+		return true;
+	};
 	async login(username: String, password: String) {
-		this.setState({ isLoading: true });
+		this.button
+			.rubberBand(300)
+			.then(endState => this.setState({ isLoading: true }));
 		try {
 			let response = await fetch(getUrlKesehatan(username, password));
 			try {
@@ -104,6 +121,14 @@ class Login extends Component<Props, State> {
 			console.error(error);
 		}
 	}
+	exit = () =>
+		this.view.bounceOutDown(1000).then(endState => {
+			if (endState.finished) {
+				console.log(endState);
+				this.props.navigation.dispatch(NavigationActions.back());
+				DeviceEventEmitter.emit('popAnimation');
+			} else console.log('canceled');
+		});
 	render() {
 		return (
 			<ImageBackground
@@ -111,9 +136,16 @@ class Login extends Component<Props, State> {
 				source={Background}
 			>
 				<ScrollView contentContainerStyle={styles.container}>
-					<View style={styles.formContainer}>
+					<Animatable.View
+						ref={ref => (this.view = ref)}
+						// animation="bounceInUp"
+						style={styles.formContainer}
+					>
 						<Text style={styles.title}>Kesehatan App</Text>
-						<View style={styles.inputContainer}>
+						<Animatable.View
+							ref={ref => (this.usernameView = ref)}
+							style={styles.inputContainer}
+						>
 							<TextInput
 								padding={10}
 								placeholder="username"
@@ -124,8 +156,11 @@ class Login extends Component<Props, State> {
 									this.secondTextInput.focus();
 								}}
 							/>
-						</View>
-						<View style={styles.inputContainer}>
+						</Animatable.View>
+						<Animatable.View
+							ref={ref => (this.passwordView = ref)}
+							style={styles.inputContainer}
+						>
 							<TextInput
 								padding={10}
 								secureTextEntry
@@ -139,7 +174,7 @@ class Login extends Component<Props, State> {
 									this.login(this.state.username, this.state.password)
 								}
 							/>
-						</View>
+						</Animatable.View>
 						{this.state.isLoading ? (
 							<View
 								style={{
@@ -151,31 +186,50 @@ class Login extends Component<Props, State> {
 								<ActivityIndicator color="white" size="large" />
 							</View>
 						) : (
-							<TouchableOpacity
-								style={styles.button}
-								onPress={() => {
-									this.state.username !== '' && this.state.password !== ''
-										? this.login(this.state.username, this.state.password)
-										: Alert.alert(
-												'Perhatian',
-												'Silahkan masukkan username dan password terlebih dahulu!'
-										  );
-									// this.props.navigation.navigate('Home');
-								}}
-							>
-								<Text
-									style={{
-										color: '#fff',
-										fontSize: 18,
-										fontFamily: 'Laila-Medium',
-										alignSelf: 'center'
+							<Animatable.View ref={ref => (this.button = ref)}>
+								<TouchableOpacity
+									style={styles.button}
+									onPress={() => {
+										// this.state.username !== '' && this.state.password !== ''
+										// 	? this.login(this.state.username, this.state.password)
+										// 	: Alert.alert(
+										// 			'Perhatian',
+										// 			'Silahkan masukkan username dan password terlebih dahulu!'
+										// 	  );
+										// this.props.navigation.navigate('Home');
+										if (
+											this.state.username === '' &&
+											this.state.password === ''
+										) {
+											this.usernameView.shake(800);
+											this.passwordView.shake(800);
+											// Alert.alert(
+											// 	'Perhatian',
+											// 	'Silahkan masukkan username dan password terlebih dahulu!'
+											// );
+										} else if (this.state.username === '') {
+											this.usernameView.shake(800);
+										} else if (this.state.password === '') {
+											this.passwordView.shake(800);
+										} else {
+											this.login(this.state.username, this.state.password);
+										}
 									}}
 								>
-									Login
-								</Text>
-							</TouchableOpacity>
+									<Text
+										style={{
+											color: '#fff',
+											fontSize: 18,
+											fontFamily: 'Laila-Medium',
+											alignSelf: 'center'
+										}}
+									>
+										Login
+									</Text>
+								</TouchableOpacity>
+							</Animatable.View>
 						)}
-					</View>
+					</Animatable.View>
 				</ScrollView>
 			</ImageBackground>
 		);
