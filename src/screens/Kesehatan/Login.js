@@ -20,6 +20,7 @@ import { NavigationActions } from 'react-navigation';
 import Background from '../../../assets/main_bg.png';
 import { color, tokens, getUrlKesehatan } from '../../libs/metrics';
 import { withConsumer } from '../../store';
+import FormInput from '../../components/FormInput';
 
 const styles = StyleSheet.create({
 	container: {
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
 type Props = {
 	navigation: {
 		navigate: Function
-	}
+	},
+	setStoreState: Function
 };
 type State = {
 	username: String,
@@ -83,7 +85,7 @@ class Login extends Component<Props, State> {
 		return true;
 	};
 	async login(username: String, password: String) {
-		this.button
+		await this.button
 			.rubberBand(300)
 			.then(endState => this.setState({ isLoading: true }));
 		try {
@@ -142,39 +144,37 @@ class Login extends Component<Props, State> {
 						style={styles.formContainer}
 					>
 						<Text style={styles.title}>Kesehatan App</Text>
-						<Animatable.View
-							ref={ref => (this.usernameView = ref)}
-							style={styles.inputContainer}
-						>
-							<TextInput
-								padding={10}
-								placeholder="username"
-								returnKeyType="next"
-								blurOnSubmit={false}
-								onChangeText={val => this.setState({ username: val })}
-								onSubmitEditing={() => {
+						<FormInput
+							viewRef={ref => (this.usernameView = ref)}
+							placeholder="username"
+							returnKeyType="next"
+							blurOnSubmit={false}
+							onChangeText={val => this.setState({ username: val })}
+							onSubmitEditing={() => {
+								if (this.state.username === '') {
+									this.usernameView.shake(800);
+								} else {
 									this.secondTextInput.focus();
-								}}
-							/>
-						</Animatable.View>
-						<Animatable.View
-							ref={ref => (this.passwordView = ref)}
-							style={styles.inputContainer}
-						>
-							<TextInput
-								padding={10}
-								secureTextEntry
-								placeholder="password"
-								returnKeyLabel="Login"
-								onChangeText={val => this.setState({ password: val })}
-								ref={input => {
-									this.secondTextInput = input;
-								}}
-								onSubmitEditing={() =>
-									this.login(this.state.username, this.state.password)
 								}
-							/>
-						</Animatable.View>
+							}}
+						/>
+						<FormInput
+							viewRef={ref => (this.passwordView = ref)}
+							secureTextEntry
+							placeholder="password"
+							returnKeyLabel="Login"
+							onChangeText={val => this.setState({ password: val })}
+							inputRef={input => {
+								this.secondTextInput = input;
+							}}
+							onSubmitEditing={() => {
+								if (this.state.password === '') {
+									this.passwordView.shake(800);
+								} else {
+									this.login(this.state.username, this.state.password);
+								}
+							}}
+						/>
 						{this.state.isLoading ? (
 							<View
 								style={{

@@ -2,23 +2,20 @@ import React, { Component } from 'react';
 
 const Context = React.createContext();
 
-class AppProvider extends Component {
+type Props = {
+	state: Object
+};
+type State = {
+	setStoreState: Function
+};
+class AppProvider extends Component<Props, State> {
 	constructor(props) {
 		super(props);
 		this.state = {
-			// tokenKesehatan: '',
-			// setTokenKesehatan: this.setTokenKesehatan,
-			// removeTokenKesehatan: this.removeTokenKesehatan
 			...props.state,
 			setStoreState: this.setStoreState
 		};
 	}
-	// setTokenKesehatan = (token: String) => {
-	// 	this.setState({ tokenKesehatan: token });
-	// };
-	// removeTokenKesehatan = () => {
-	// 	this.setState({ tokenKesehatan: '' });
-	// };
 	setStoreState = state => {
 		this.setState(state);
 	};
@@ -31,7 +28,7 @@ class AppProvider extends Component {
 	}
 }
 
-const withConsumer = WrappedComponent => {
+const withConsumer = (WrappedComponent: Component) => {
 	return class extends Component {
 		static navigationOptions = WrappedComponent.navigationOptions;
 		render() {

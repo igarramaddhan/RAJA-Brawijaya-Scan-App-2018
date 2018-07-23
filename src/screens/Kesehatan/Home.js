@@ -15,7 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
 
-import { color, width } from '../../libs/metrics';
+import { color, width, tokens } from '../../libs/metrics';
 import ListCard from '../../components/ListCard';
 import { withConsumer } from '../../store';
 
@@ -78,7 +78,9 @@ const List = ({ title, subTitle }) => (
 	</View>
 );
 
-type Props = {};
+type Props = {
+	setStoreState: Function
+};
 type State = {
 	data: Object
 };
@@ -149,7 +151,7 @@ class Home extends Component<Props, State> {
 					text: 'Ya',
 					onPress: async () => {
 						try {
-							await AsyncStorage.clear();
+							await AsyncStorage.removeItem(tokens.KESEHATAN);
 							this.props.store.setStoreState({ tokenKesehatan: null });
 							this.props.navigation.dispatch(NavigationActions.back());
 							DeviceEventEmitter.emit('popAnimation');

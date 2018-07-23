@@ -8,7 +8,8 @@ import AppNavigator from './src/AppNavigator';
 import { AppProvider } from './src/store';
 
 const initialState = {
-	tokenKesehatan: null
+	tokenKesehatan: null,
+	dataUKM: null
 };
 
 type Props = {};

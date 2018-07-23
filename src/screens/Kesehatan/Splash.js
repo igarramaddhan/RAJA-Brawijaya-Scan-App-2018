@@ -8,7 +8,6 @@ import {
 	ImageBackground,
 	Image
 } from 'react-native';
-// import { observer, inject } from 'mobx-react';
 import { color, tokens } from '../../libs/metrics';
 import Logo from '../../../assets/logo.png';
 import { withConsumer } from '../../store';
@@ -23,10 +22,15 @@ const styles = StyleSheet.create({
 	}
 });
 
-type Props = {};
+type Props = {
+	store: {
+		setStoreState: Function
+	},
+	navigation: {
+		navigate: Function
+	}
+};
 type State = {};
-// @inject('userStore')
-// @observer
 class Splash extends Component<Props, State> {
 	constructor(props) {
 		super(props);
