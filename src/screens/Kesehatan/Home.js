@@ -10,7 +10,9 @@ import {
 	Alert,
 	AsyncStorage,
 	BackHandler,
-	DeviceEventEmitter
+	DeviceEventEmitter,
+	Modal,
+	TouchableHighlight
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
@@ -18,6 +20,8 @@ import { NavigationActions } from 'react-navigation';
 import { color, width, tokens } from '../../libs/metrics';
 import ListCard from '../../components/ListCard';
 import { withConsumer } from '../../store';
+import ModalView from '../../components/Modal';
+import FormInput from '../../components/FormInput';
 
 const styles = StyleSheet.create({
 	container: {
@@ -55,6 +59,12 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontFamily: 'Laila-Regular',
 		fontSize: 15
+	},
+	title: {
+		color: '#fff',
+		fontSize: 18,
+		fontFamily: 'Laila-Medium',
+		alignSelf: 'center'
 	}
 });
 
@@ -113,10 +123,15 @@ class Home extends Component<Props, State> {
 			headerLeft: <View />
 		};
 	};
+	setModalVisible(visible) {
+		this.setState({ modalVisible: visible });
+	}
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: null
+			data: null,
+			modalVisible: false,
+			nim: ''
 		};
 	}
 	componentDidMount() {
@@ -165,9 +180,32 @@ class Home extends Component<Props, State> {
 			{ cancelable: false }
 		);
 	};
+	getNIM = async nim => {
+		try {
+			let response = await fetch(
+				`https://rajabrawijaya.ub.ac.id/labina/wid/decrypt?str=${nim}`
+			);
+			try {
+				let responseJson = await response.json();
+				return responseJson;
+			} catch (err) {
+				console.log(err);
+				return 0;
+			}
+		} catch (error) {
+			console.error(error);
+			return 0;
+		}
+	};
 	scan = async scanData => {
+		// 377949593030235
+		console.log(scanData);
 		let scanDataArray = scanData.split(' ');
-		const nim = scanDataArray[0];
+		const encryptedNIM = scanDataArray[0];
+		const nim =
+			encryptedNIM.substring(0, 3) === '185'
+				? encryptedNIM
+				: await this.getNIM(encryptedNIM);
 		scanDataArray.shift();
 		try {
 			console.log('fetching data');
@@ -196,11 +234,12 @@ class Home extends Component<Props, State> {
 				<TouchableOpacity
 					style={styles.floatingButton}
 					onPress={() => {
-						// this.props.navigation.navigate('Camera', {
-						// 	scan: this.scan
-						// });
-						this.scan('185020301111050 Lala');
+						this.props.navigation.navigate('Camera', {
+							scan: this.scan
+						});
+						// this.scan('185020301111050 Lala');
 					}}
+					onLongPress={() => this.setModalVisible(true)}
 				>
 					<Icon
 						name="camera"
@@ -225,16 +264,6 @@ class Home extends Component<Props, State> {
 									<Text style={styles.normalText}>{data.nim}</Text>
 									<Text style={styles.normalText}>{data.nama}</Text>
 								</View>
-								{/* <View style={styles.itemContent}>
-									<Image
-										source={{
-											uri: `http://siakad.ub.ac.id/siam/biodata.fotobynim.php?nim=${
-												data.nim
-											}&key=MzIxZm90b3V5ZTEyMysyMDE4LTA3LTAzIDIxOjE3OjM4`
-										}}
-										style={{ height: 199, width: 132 }}
-									/>
-								</View> */}
 							</View>
 						</ListCard>
 						<ScrollView
@@ -257,6 +286,78 @@ class Home extends Component<Props, State> {
 						</ScrollView>
 					</View>
 				)}
+				<ModalView
+					transparent={true}
+					visible={this.state.modalVisible}
+					onRequestClose={() => {
+						this.setModalVisible(false);
+					}}
+				>
+					<View
+						style={{
+							backgroundColor: 'rgba(0,0,0,0.5)',
+							flex: 1,
+							justifyContent: 'center'
+						}}
+					>
+						<View
+							style={{
+								backgroundColor: color.red,
+								padding: 10,
+								borderRadius: 3,
+								marginHorizontal: 10
+							}}
+						>
+							<Text style={styles.title}>Masukkan NIM</Text>
+							<FormInput
+								keyboardType="number-pad"
+								placeholder="NIM"
+								onChangeText={val => this.setState({ nim: val })}
+								onSubmitEditing={() => {
+									this.scan(this.state.nim);
+									this.setModalVisible(false);
+								}}
+							/>
+							<View
+								style={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+							>
+								<TouchableOpacity
+									style={{
+										backgroundColor: color.primary,
+										elevation: 3,
+										margin: 3,
+										padding: 8,
+										borderRadius: 3
+									}}
+									onPress={() => {
+										this.setModalVisible(false);
+									}}
+								>
+									<Text style={[styles.normalText, { color: 'white' }]}>
+										Close
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={{
+										backgroundColor: color.darkGreen,
+										elevation: 3,
+										margin: 3,
+										padding: 8,
+										borderRadius: 3
+									}}
+									onPress={() => {
+										this.scan(this.state.nim);
+										this.setModalVisible(false);
+									}}
+								>
+									<Text style={[styles.normalText, { color: 'white' }]}>
+										Submit
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+				</ModalView>
 			</View>
 		);
 	}

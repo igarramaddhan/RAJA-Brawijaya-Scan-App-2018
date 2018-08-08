@@ -35,9 +35,9 @@ class Splash extends Component<Props, State> {
 	async componentDidMount() {
 		console.log('getting token');
 		try {
-			const token = await AsyncStorage.getItem(tokens.KESEHATAN);
+			const token = await AsyncStorage.getItem(tokens.ABSENSI);
 			if (token) {
-				this.props.store.setStoreState({ tokenKesehatan: JSON.parse(token) });
+				this.props.store.setStoreState({ tokenAbsensi: JSON.parse(token) });
 				this.props.navigation.navigate('Absensi');
 			} else {
 				this.props.navigation.navigate('Login');

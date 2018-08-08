@@ -9,7 +9,8 @@ import { AppProvider } from './src/store';
 
 const initialState = {
 	tokenKesehatan: null,
-	dataUKM: null
+	dataUKM: null,
+	tokenAbsensi: null
 };
 
 type Props = {};

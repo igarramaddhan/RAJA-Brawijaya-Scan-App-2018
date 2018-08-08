@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+	View,
+	Text,
+	StyleSheet,
+	ActivityIndicator,
+	PermissionsAndroid
+} from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { height, width } from '../libs/metrics';
 const styles = StyleSheet.create({

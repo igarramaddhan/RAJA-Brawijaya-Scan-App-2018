@@ -11,7 +11,8 @@ const color = {
 const tokens = {
 	OPEN_HOUSE: 'OPEN_HOUSE_TOKEN',
 	MARKETPLACE: 'MARKETPLACE_TOKEN',
-	KESEHATAN: 'KESEHATAN_TOKEN'
+	KESEHATAN: 'KESEHATAN_TOKEN',
+	ABSENSI: 'ABSENSI_TOKEN'
 };
 
 const getUrlKesehatan = (username, password) =>

@@ -180,10 +180,10 @@ class Home extends Component<Props, State> {
 				<TouchableOpacity
 					style={styles.floatingButton}
 					onPress={() => {
-						// this.props.navigation.navigate('Camera', {
-						// 	scan: this.scan
-						// });
-						this.scan('185020301111043 Lala');
+						this.props.navigation.navigate('Camera', {
+							scan: this.scan
+						});
+						// this.scan('185020301111043 Lala');
 					}}
 				>
 					<Icon

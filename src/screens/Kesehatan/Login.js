@@ -73,9 +73,11 @@ class Login extends Component<Props, State> {
 			isLoading: false
 		};
 	}
+	componentWillMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+	}
 	componentDidMount() {
 		this.view.bounceInUp(2000);
-		BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
 	}
 	componentWillUnmount() {
 		BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
@@ -126,7 +128,6 @@ class Login extends Component<Props, State> {
 	exit = () =>
 		this.view.bounceOutDown(1000).then(endState => {
 			if (endState.finished) {
-				console.log(endState);
 				this.props.navigation.dispatch(NavigationActions.back());
 				DeviceEventEmitter.emit('popAnimation');
 			} else console.log('canceled');

@@ -1,5 +1,11 @@
 import React, { Component, Ref } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import {
+	View,
+	Text,
+	StyleSheet,
+	TextInput,
+	KeyboardTypeOptions
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 const styles = StyleSheet.create({
 	inputContainer: {
@@ -15,7 +21,8 @@ type Props = {
 	onSubmitEditing: Function,
 	inputRef: Ref<TextInput>,
 	returnKeyType: String,
-	returnKeyLabel: String
+	returnKeyLabel: String,
+	keyboardType: KeyboardTypeOptions
 };
 type State = {};
 export default class FormInput extends Component<Props, State> {
