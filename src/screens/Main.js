@@ -18,11 +18,12 @@ import Background from '../../assets/main_bg.png';
 import Kesehatan from '../../assets/kesehatan.png';
 import Marketplace from '../../assets/marketplace.jpg';
 import OpenHouse from '../../assets/openhouse.png';
-import Absensi from '../../assets/absensi.jpg';
+import Absensi from '../../assets/absensi.png';
 import { height, width } from '../libs/metrics';
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		backgroundColor: '#feffc6'
 	},
 	content: {
 		// flex: 1,
@@ -94,20 +95,21 @@ export default class Main extends Component<Props, State> {
 			}
 		},
 
-		{
-			image: Marketplace,
-			title: 'Marketplace',
-			color: '#27BBFF',
-			onPress: () => {
-				this.soon();
-			}
-		},
+		// {
+		// 	image: Marketplace,
+		// 	title: 'Marketplace',
+		// 	color: '#27BBFF',
+		// 	onPress: () => {
+		// 		this.soon();
+		// 	}
+		// },
 		{
 			image: OpenHouse,
 			title: 'Open House',
 			color: '#2F9E85',
 			onPress: () => {
-				this.animateBack(() => this.navigate('OpenHouseRoute'));
+				this.soon();
+				// this.animateBack(() => this.navigate('OpenHouseRoute'));
 			}
 		}
 	];
@@ -125,42 +127,42 @@ export default class Main extends Component<Props, State> {
 	soon() {
 		Alert.alert('Perhatian', 'Fitur ini masih dalam pengembangan');
 	}
-	// animate() {
-	// 	let x = 0;
-	// 	for (let i = 0; i < this.list.length; i++) {
-	// 		const element = this.list[i];
-	// 		element.fadeInDownBig(1000, (x += 200));
-	// 	}
-	// }
-	// animateBack(cb) {
-	// 	let x = 200;
-	// 	let a = [...this.list].reverse();
-	// 	for (let i = 0; i < a.length; i++) {
-	// 		const element = a[i];
-	// 		if (i != a.length - 1) element.fadeOutUpBig((x += 300));
-	// 		else element.fadeOutUpBig((x += 300)).then(endState => cb());
-	// 	}
-	// }
-
 	animate() {
-		this.Absensi.fadeInDownBig(1000, 0);
-		this.Kesehatan.fadeInDownBig(1000, 200);
-		this.Marketplace.fadeInDownBig(1000, 400);
-		this.OpenHouse.fadeInDownBig(1000, 600);
+		let x = 0;
+		for (let i = 0; i < this.list.length; i++) {
+			const element = this.list[i];
+			element.fadeInDownBig(1000, (x += 200));
+		}
 	}
 	animateBack(cb) {
-		this.OpenHouse.fadeOutUpBig(200);
-		this.Marketplace.fadeOutUpBig(500);
-		this.Absensi.fadeOutUpBig(800);
-		this.Kesehatan.fadeOutUpBig(1100).then(endState => cb());
+		let x = 200;
+		let a = [...this.list].reverse();
+		for (let i = 0; i < a.length; i++) {
+			const element = a[i];
+			if (i != a.length - 1) element.fadeOutUpBig((x += 300));
+			else element.fadeOutUpBig((x += 300)).then(endState => cb());
+		}
 	}
+
+	// animate() {
+	// 	this.Absensi.fadeInDownBig(1000, 0);
+	// 	this.Kesehatan.fadeInDownBig(1000, 200);
+	// 	this.Marketplace.fadeInDownBig(1000, 400);
+	// 	this.OpenHouse.fadeInDownBig(1000, 600);
+	// }
+	// animateBack(cb) {
+	// 	this.OpenHouse.fadeOutUpBig(200);
+	// 	this.Marketplace.fadeOutUpBig(500);
+	// 	this.Absensi.fadeOutUpBig(800);
+	// 	this.Kesehatan.fadeOutUpBig(1100).then(endState => cb());
+	// }
 	renderCard({ image, title, color, onPress, ref }) {
 		return (
 			<Animatable.View
 				useNativeDriver={true}
 				style={{ height: 250 }}
-				// ref={ref => this.list.push(ref)}
-				ref={ref => (this[title.replace(/\s/g, '')] = ref)}
+				ref={ref => this.list.push(ref)}
+				// ref={ref => (this[title.replace(/\s/g, '')] = ref)}
 				key={title}
 			>
 				<TouchableOpacity

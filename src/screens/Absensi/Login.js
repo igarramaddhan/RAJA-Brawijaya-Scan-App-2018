@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		marginTop: StatusBar.currentHeight,
-		justifyContent: 'center'
+		justifyContent: 'center',
+		backgroundColor: '#feffc6'
 	},
 	formContainer: {
 		elevation: 3,
@@ -86,42 +87,46 @@ class Login extends Component<Props, State> {
 		return true;
 	};
 	async login(username: String, password: String) {
-		this.button
-			.rubberBand(300)
-			.then(endState => this.setState({ isLoading: true }));
-		try {
-			let response = await fetch(getUrlKesehatan(username, password));
+		if (username !== 'kesehatan') {
+			this.button
+				.rubberBand(300)
+				.then(endState => this.setState({ isLoading: true }));
 			try {
-				console.log('processing data');
-				let responseJson = await response.json();
-				if (responseJson.cek) {
-					try {
-						await AsyncStorage.setItem(
-							tokens.ABSENSI,
-							JSON.stringify(responseJson.cek)
-						);
-						this.props.store.setStoreState({
-							tokenAbsensi: responseJson.cek
-						});
-						this.props.navigation.navigate('Home');
-					} catch (error) {
+				let response = await fetch(getUrlKesehatan(username, password));
+				try {
+					console.log('processing data');
+					let responseJson = await response.json();
+					if (responseJson.cek) {
+						try {
+							await AsyncStorage.setItem(
+								tokens.ABSENSI,
+								JSON.stringify(responseJson.cek)
+							);
+							this.props.store.setStoreState({
+								tokenAbsensi: responseJson.cek
+							});
+							this.props.navigation.navigate('Home');
+						} catch (error) {
+							this.setState({ isLoading: false });
+							console.log(error);
+							Alert.alert('Error', 'Maaf terjadi kesalahan');
+						}
+					} else {
 						this.setState({ isLoading: false });
-						console.log(error);
-						Alert.alert('Error', 'Maaf terjadi kesalahan');
+						Alert.alert('Perhatian', 'Username atau Password salah!');
 					}
-				} else {
+				} catch (err) {
 					this.setState({ isLoading: false });
-					Alert.alert('Perhatian', 'Username atau Password salah!');
+					console.log('error processing data');
+					Alert.alert('Error', 'Anda tidak terdaftar');
 				}
-			} catch (err) {
+			} catch (error) {
 				this.setState({ isLoading: false });
-				console.log('error processing data');
-				Alert.alert('Error', 'Anda tidak terdaftar');
+				console.log('unexpected format');
+				console.error(error);
 			}
-		} catch (error) {
-			this.setState({ isLoading: false });
-			console.log('unexpected format');
-			console.error(error);
+		} else {
+			Alert.alert('Perhatian', 'Username atau Password salah!');
 		}
 	}
 	exit = () =>

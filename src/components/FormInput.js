@@ -43,6 +43,7 @@ export default class FormInput extends Component<Props, State> {
 			<Animatable.View ref={viewRef} style={styles.inputContainer}>
 				<TextInput
 					{...props}
+					autoCapitalize="none"
 					ref={inputRef}
 					padding={10}
 					placeholder={placeholder}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 // import { Provider } from 'mobx-react';
+import codePush from 'react-native-code-push';
 
 import AppNavigator from './src/AppNavigator';
 // import UserStore from './src/store/user';
@@ -15,7 +16,7 @@ const initialState = {
 
 type Props = {};
 type State = {};
-export default class App extends Component<Props, State> {
+class App extends Component<Props, State> {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -30,3 +31,11 @@ export default class App extends Component<Props, State> {
 		);
 	}
 }
+
+let codePushOptions = {
+	checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+	installMode: codePush.InstallMode.IMMEDIATE
+};
+
+const Main = (AwesomeApp = codePush(codePushOptions)(App));
+export default Main;

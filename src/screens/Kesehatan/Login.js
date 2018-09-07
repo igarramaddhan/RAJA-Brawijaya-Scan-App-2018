@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		marginTop: StatusBar.currentHeight,
-		justifyContent: 'center'
+		justifyContent: 'center',
+		backgroundColor: '#feffc6'
 	},
 	formContainer: {
 		elevation: 3,

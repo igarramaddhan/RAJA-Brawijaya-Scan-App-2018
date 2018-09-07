@@ -13,6 +13,8 @@ import java.util.List;
 import com.oblador.vectoricons.VectorIconsPackage;
 import org.reactnative.camera.RNCameraPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.microsoft.codepush.react.CodePush;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -20,7 +22,10 @@ public class MainApplication extends Application implements ReactApplication {
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
-
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
@@ -28,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
               , new VectorIconsPackage()
               , new RNCameraPackage()
               , new SplashScreenReactPackage()
+              , new CodePush("8WZ-cASHNl0W9_7khWSvcZ1BpR_z9f85705a-0686-4398-b125-66f390566b20", MainApplication.this, BuildConfig.DEBUG)
       );
     }
 
