@@ -192,16 +192,15 @@ class Home extends Component<Props, State> {
   scan = async scanData => {
     let scanDataArray = scanData.split(' ');
     const encryptedNIM = scanDataArray[0];
-    // const nim =
-    // encryptedNIM.substring(0, 3) === '185' ||
-    // encryptedNIM.substring(0, 3) === '165'
-    // 	? encryptedNIM
-    // 	: await this.getNIM(encryptedNIM);
+    const nim =
+      encryptedNIM.length === 15 && encryptedNIM.slice(0, 1) == 1
+        ? encryptedNIM
+        : await this.getNIM(encryptedNIM);
     scanDataArray.shift();
     try {
       console.log('fetching data');
       let response = await fetch(
-        `https://rajabrawijaya.ub.ac.id/absenoh/${encryptedNIM}`
+        `https://rajabrawijaya.ub.ac.id/absenpbpknimm/${nim}`
       );
       try {
         console.log('processing data');

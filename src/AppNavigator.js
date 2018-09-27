@@ -1,9 +1,9 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import {
-	createSwitchNavigator,
-	createBottomTabNavigator,
-	createStackNavigator
+  createSwitchNavigator,
+  createBottomTabNavigator,
+  createStackNavigator
 } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -24,51 +24,63 @@ import LoginAbsensiScreen from './screens/Absensi/Login';
 import AbsensiScreen from './screens/Absensi';
 import SplashAbsensiScreen from './screens/Absensi/Splash';
 
+//MARKETPLACE
+import LoginMarketScreen from './screens/Market/Login';
+import MarketScreen from './screens/Market';
+import SplashMarketScreen from './screens/Market/Splash';
+
 const OpenHouseNavigator = createSwitchNavigator(
-	{
-		Splash: SplashOpenHouseScreen,
-		Login: LoginOpenHouseScreen,
-		OpenHouse: OpenHouseScreen
-	},
-	{
-		initialRouteName: 'Splash'
-	}
+  {
+    Splash: SplashOpenHouseScreen,
+    Login: LoginOpenHouseScreen,
+    OpenHouse: OpenHouseScreen
+  },
+  {
+    initialRouteName: 'Splash'
+  }
 );
 
 const AbsensiNavigator = createSwitchNavigator({
-	Splash: SplashAbsensiScreen,
-	Login: LoginAbsensiScreen,
-	Absensi: AbsensiScreen
+  Splash: SplashAbsensiScreen,
+  Login: LoginAbsensiScreen,
+  Absensi: AbsensiScreen
 });
 
 const KesehatanNavigator = createSwitchNavigator({
-	Splash: SplashKesehatanScreen,
-	Login: LoginKesehatanScreen,
-	Kesehatan: KesehantanScreen
+  Splash: SplashKesehatanScreen,
+  Login: LoginKesehatanScreen,
+  Kesehatan: KesehantanScreen
+});
+
+const MarketplaceNavigator = createSwitchNavigator({
+  Splash: SplashMarketScreen,
+  Login: LoginMarketScreen,
+  Market: MarketScreen
 });
 
 const RootNavigator = createStackNavigator(
-	{
-		Main: Main,
-		OpenHouseRoute: OpenHouseNavigator,
-		AbsensiRoute: AbsensiNavigator,
-		KesehatanRoute: KesehatanNavigator
-	},
-	{
-		headerMode: 'none',
-		navigationOptions: {
-			headerStyle: {
-				height: 56 + StatusBar.currentHeight,
-				paddingTop: StatusBar.currentHeight
-			}
-		},
-		transitionConfig: () => ({
-			transitionSpec: {
-				duration: 0
-				// easing: Easing
-			}
-		})
-	}
+  {
+    Main: Main,
+    OpenHouseRoute: OpenHouseNavigator,
+    AbsensiRoute: AbsensiNavigator,
+    KesehatanRoute: KesehatanNavigator,
+    MarketplaceRoute: MarketplaceNavigator
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {
+      headerStyle: {
+        height: 56 + StatusBar.currentHeight,
+        paddingTop: StatusBar.currentHeight
+      }
+    },
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 0
+        // easing: Easing
+      }
+    })
+  }
 );
 
 export default RootNavigator;

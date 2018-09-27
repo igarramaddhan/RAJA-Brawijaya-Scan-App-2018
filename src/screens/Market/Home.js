@@ -107,7 +107,7 @@ class Home extends Component<Props, State> {
               alignSelf: 'center'
             }}
           >
-            Kesehatan
+            Marketplace
           </Text>
         </View>
       ),
@@ -166,8 +166,8 @@ class Home extends Component<Props, State> {
           text: 'Ya',
           onPress: async () => {
             try {
-              await AsyncStorage.removeItem(tokens.KESEHATAN);
-              this.props.store.setStoreState({ tokenKesehatan: null });
+              await AsyncStorage.removeItem(tokens.MARKETPLACE);
+              this.props.store.setStoreState({ tokenMarket: null });
               this.props.navigation.dispatch(NavigationActions.back());
               DeviceEventEmitter.emit('popAnimation');
               // this.props.navigation.navigate('Main');
@@ -199,23 +199,24 @@ class Home extends Component<Props, State> {
   };
   scan = async scanData => {
     // 377949593030235
-    console.log(scanData);
+    this.props.navigation.goBack();
     let scanDataArray = scanData.split(' ');
     const encryptedNIM = scanDataArray[0];
     const nim =
-      encryptedNIM.substring(0, 3) === '185'
+      encryptedNIM.length === 15
         ? encryptedNIM
         : await this.getNIM(encryptedNIM);
     scanDataArray.shift();
     try {
       console.log('fetching data');
       let response = await fetch(
-        `https://rajabrawijaya.ub.ac.id/api/getDataMahasiswaBaru2018?nim=${nim}`
+        `https://rajabrawijaya.ub.ac.id/api/getPemesanan?nim=${nim}`
       );
+      console.log('nim', nim);
       try {
         console.log('processing data');
         let responseJson = await response.json();
-        this.setState({ data: responseJson });
+        this.setState({ data: responseJson.data });
         console.log(responseJson);
       } catch (err) {
         console.log('error processing data');
@@ -228,6 +229,7 @@ class Home extends Component<Props, State> {
   };
   render() {
     const { data } = this.state;
+    console.log(data);
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -275,14 +277,58 @@ class Home extends Component<Props, State> {
             >
               <ListCard style={{ padding: 10 }}>
                 <List title="Fakultas" subTitle={data.fakultas} />
-                <List title="Cluster" subTitle={data.cluster} />
-                <List title="Gerbang" subTitle={data.gerbang} />
-                <List
-                  title="Riwayat Penyakit"
-                  subTitle={data.riwayat_penyakit}
-                />
-                <List title="Alergi Obat" subTitle={data.alergi_obat} />
-                <List title="Alergi Makanan" subTitle={data.alergi_makanan} />
+                <List title="Status" subTitle={data.status} />
+              </ListCard>
+              <ListCard style={{ padding: 10, marginBottom: 70 }}>
+                <View
+                  style={[
+                    styles.item,
+                    {
+                      borderBottomColor: color.darkGray,
+                      borderBottomWidth: 0.5,
+                      marginBottom: 10,
+                      padding: 10
+                    }
+                  ]}
+                >
+                  <Text
+                    style={[styles.normalText, { fontFamily: 'Laila-Bold' }]}
+                  >
+                    Pesanan
+                  </Text>
+                </View>
+                {data.pesanan.map((val, id) => (
+                  <View
+                    key={id}
+                    style={{
+                      flexDirection: 'row',
+                      padding: 10,
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <Text style={styles.normalText}>{val.barang}</Text>
+                    <Text style={styles.normalText}>
+                      {val.jumlah + ' x ' + val.harga}
+                    </Text>
+                  </View>
+                ))}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    padding: 10,
+                    justifyContent: 'space-between',
+                    borderTopColor: color.darkGray,
+                    borderTopWidth: 0.5,
+                    marginTop: 10
+                  }}
+                >
+                  <Text
+                    style={[styles.normalText, { fontFamily: 'Laila-Bold' }]}
+                  >
+                    Total
+                  </Text>
+                  <Text style={styles.normalText}>{data.totalHarga}</Text>
+                </View>
               </ListCard>
             </ScrollView>
           </View>

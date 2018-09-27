@@ -43,6 +43,7 @@ export default class Camera extends Component<Props, State> {
     const { loading } = this.state;
     const greenBoxSize = height / 2;
     const scan = this.props.navigation.getParam('scan', () => {});
+    const back = this.props.navigation.getParam('back', false);
     return (
       <View style={styles.container}>
         <View style={styles.cameraView}>
@@ -59,7 +60,7 @@ export default class Camera extends Component<Props, State> {
                 this.setState({ loading: true });
                 await scan(data);
                 this.setState({ loading: false });
-                // this.props.navigation.goBack();
+                back && this.props.navigation.goBack();
               }}
             >
               <View
